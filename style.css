@@ -1,0 +1,734 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #121212;
+    margin: 0;
+    color: #f1f1f1;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Smooth scrolling for the entire site */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Update the app container */
+.app {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 30px;
+    background: rgba(30, 30, 30, 0.75); /* Slightly more opaque */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    text-align: center;
+    margin: 0 0 30px;
+    color: #f1f1f1;
+    font-size: 2.5em;
+}
+
+.search-box {
+    position: relative;
+    margin: 20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Update search box for consistency */
+#searchInput {
+    width: 65%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    background: rgba(44, 44, 44, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #f1f1f1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: rgba(33, 150, 243, 0.5);
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
+}
+
+#searchButton {
+    padding: 12px 20px;
+    background: #2196F3;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#searchButton:hover {
+    background: #1976D2;
+}
+
+#searchButton:active {
+    animation: buttonPulse 0.3s ease;
+}
+
+@keyframes buttonPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65%;
+    background: rgba(44, 44, 44, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    margin-top: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top;
+}
+
+.suggestions.hidden {
+    transform: scaleY(0);
+    opacity: 0;
+}
+
+.suggestions div {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.suggestions div:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Update info section layout */
+.info-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease-out;
+}
+
+.info-section.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Update country info and photos layout */
+.country-info-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Update card-like sections to be semi-transparent */
+.country-info, 
+.trivia-section, 
+.scenery-section,
+.favorites {
+    background: rgba(44, 44, 44, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.country-info {
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+    animation-delay: 1.3s; /* Start after flag animation */
+}
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.country-photos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.country-photo {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Flag animation styles */
+.country-flag {
+    display: inline-block;
+    position: relative;
+    margin-left: 15px;
+    vertical-align: middle;
+    perspective: 1000px;
+}
+
+.country-flag img {
+    width: 60px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.country-flag.animate img {
+    animation: flagEntrance 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-origin: center center;
+}
+
+@keyframes flagEntrance {
+    0% {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(3) rotate(15deg);
+        opacity: 0;
+        z-index: 1000;
+    }
+    20% {
+        opacity: 1;
+    }
+    60% {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(3) rotate(0deg);
+        z-index: 1000;
+    }
+    100% {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        z-index: 1;
+    }
+}
+
+/* Map Styles */
+#map {
+    height: 400px;
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 10;
+    background: rgba(44, 44, 44, 0.8);
+}
+
+#map.hidden {
+    display: none;
+}
+
+/* Map Loading Spinner */
+.map-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(33, 150, 243, 0.3);
+    border-radius: 50%;
+    border-top-color: #2196F3;
+    animation: spin 1s ease-in-out infinite;
+    z-index: 1000;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Leaflet Map Controls Styling */
+.leaflet-container {
+    font: inherit;
+    border-radius: 10px;
+    background: rgba(30, 30, 30, 0.8) !important;
+}
+
+.leaflet-popup-content-wrapper {
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.leaflet-popup-tip {
+    background: rgba(30, 30, 30, 0.95);
+}
+
+.leaflet-control-zoom a {
+    background: rgba(44, 44, 44, 0.8) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.leaflet-control-zoom a:hover {
+    background: rgba(55, 55, 55, 0.9) !important;
+}
+
+.leaflet-control-attribution {
+    background: rgba(44, 44, 44, 0.8) !important;
+    color: #fff !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.leaflet-control-attribution a {
+    color: #2196F3 !important;
+}
+
+/* Map Animation */
+#map.show {
+    animation: mapFadeIn 0.5s ease-out forwards;
+}
+
+@keyframes mapFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Update trivia section layout */
+.trivia-section {
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 1.8s; /* Start after country info */
+}
+
+.trivia-title {
+    color: #2196F3;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.trivia-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.trivia-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid #2196F3;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.trivia-item:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.trivia-item:nth-child(1) { animation-delay: 0.1s; }
+.trivia-item:nth-child(2) { animation-delay: 0.2s; }
+.trivia-item:nth-child(3) { animation-delay: 0.3s; }
+.trivia-item:nth-child(4) { animation-delay: 0.4s; }
+
+.local-time {
+    color: #0d6efd;
+    font-weight: 500;
+    display: inline-block;
+    min-width: 300px;
+    padding: 8px 15px;
+    background: rgba(13, 110, 253, 0.1);
+    border-radius: 4px;
+    margin-left: 10px;
+    font-family: 'Segoe UI', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+/* Update the globe container */
+.globe-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+}
+
+#globe-canvas {
+    width: 100%;
+    height: 100%;
+    opacity: 0.6; /* Increased opacity for better visibility */
+    display: block;
+    animation: globeGlow 4s ease-in-out infinite;
+}
+
+@keyframes globeGlow {
+    0% { box-shadow: 0 0 20px rgba(33, 150, 243, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(33, 150, 243, 0.4); }
+    100% { box-shadow: 0 0 20px rgba(33, 150, 243, 0.2); }
+}
+
+.favorites {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.favs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.fav-button {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 15px;
+}
+
+.fav-button.active {
+    background: #1976D2;
+}
+
+.fav-button:hover {
+    animation: starBurst 0.3s ease-in-out;
+    transform: scale(1.05);
+}
+
+@keyframes starBurst {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2) rotate(15deg); }
+    100% { transform: scale(1); }
+}
+
+.scenery-section {
+    margin-top: 20px;
+    background: rgba(44, 44, 44, 0.4);
+    border-radius: 10px;
+    padding: 20px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 2.2s; /* Start after map */
+}
+
+.scenery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.scenery-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.scenery-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.scenery-item:hover .scenery-photo {
+    transform: scale(1.1);
+}
+
+.scenery-item:hover {
+    animation: floatEffect 2s ease-in-out infinite;
+    transform: translateY(-5px);
+}
+
+@keyframes floatEffect {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+
+.scene-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 12px;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.scenery-item:hover .scene-info {
+    transform: translateY(0);
+}
+
+.scene-location {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.scene-credit {
+    display: block;
+    font-size: 0.8em;
+    opacity: 0.8;
+    color: #ccc;
+}
+
+.section-title {
+    color: #2196F3;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+@media (max-width: 1024px) {
+    .scenery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .app {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .photos-container {
+        grid-template-columns: 1fr;
+    }
+    
+    #searchInput, .suggestions {
+        width: 100%;
+    }
+    
+    .search-box {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #searchButton {
+        width: 100%;
+    }
+
+    .info-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .country-info {
+        grid-template-columns: 1fr;
+    }
+
+    .country-info-container,
+    .country-photos,
+    .trivia-list {
+        grid-template-columns: 1fr;
+    }
+
+    .trivia-list {
+        grid-template-columns: 1fr;
+    }
+
+    .local-time {
+        margin-left: 0;
+        margin-top: 5px;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .scenery-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading state animation */
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.loading {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05) 25%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.05) 75%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Weather icon animation */
+@keyframes weatherSway {
+    0% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+    100% { transform: rotate(-5deg); }
+}
+
+.weather-icon {
+    display: inline-block;
+    animation: weatherSway 3s ease-in-out infinite;
+}
+
+.fav-item {
+    transition: all 0.3s ease;
+}
+
+.fav-item:hover {
+    transform: translateX(5px);
+}
+
+/* Reduce motion if user prefers */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Add smooth reveal for head of state */
+.leader-info {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    border-left: 3px solid #2196F3;
+    animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
